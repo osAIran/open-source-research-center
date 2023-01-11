@@ -1,0 +1,259 @@
+\documentclass{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage[sorting = none]{biblatex}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage[table]{xcolor}
+\usepackage{array}
+\usepackage{hyperref}           % page numbers and '\ref's become clickable
+\usepackage{todonotes}
+\usepackage{float}          % for forcing images to stay where they should
+\usepackage{multirow}       % for using multirow in tables
+\usepackage{tikz}
+\usepackage{tabularx}
+\usepackage{adjustbox}
+\usepackage{longtable}
+\usepackage[edges]{forest}
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{MnSymbol}
+\usepackage{tipa}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+
+\mdfdefinestyle{Frame}{
+    linecolor=black,
+    outerlinewidth=0.3pt,
+    roundcorner=2pt,
+    innertopmargin=\baselineskip,
+    innerbottommargin=\baselineskip,
+    leftmargin =1cm,
+    rightmargin =1cm,
+    backgroundcolor=white}
+    \mdfdefinestyle{Frame_NoMargin}{%
+    linecolor=black,
+    outerlinewidth=0.3pt,
+    roundcorner=2pt,
+    innertopmargin=\baselineskip,
+    innerbottommargin=\baselineskip,
+    backgroundcolor=white}
+    \mdfdefinestyle{InnerFrame_NoMargin}{%
+    linecolor=black,
+    outerlinewidth=0.1pt,
+    roundcorner=0.5pt,
+    % innertopmargin=\baselineskip,
+    % innerbottommargin=\baselineskip,
+    leftmargin =-0.1cm,
+    innerleftmargin = 0.05cm,
+    rightmargin =0cm,
+    backgroundcolor=white}  
+    \mdfdefinestyle{InnerFrameBig_NoMargin}{%
+    linecolor=black,
+    outerlinewidth=0.1pt,
+    roundcorner=0.5pt,
+    % innertopmargin=\baselineskip,
+    % innerbottommargin=\baselineskip,
+    leftmargin =-0.22cm,
+    innerleftmargin = 0.05cm,
+    rightmargin =-0.22cm,
+    backgroundcolor=white}
+      \mdfdefinestyle{Frame_NoInnerMargin}{%
+    linecolor=black,
+    outerlinewidth=0.3pt,
+    roundcorner=2pt,
+    innerleftmargin = 0.02cm,
+    innertopmargin=\baselineskip,
+    innerbottommargin=\baselineskip,
+    backgroundcolor=white}
+      \mdfdefinestyle{Frame_Blank}{%
+    linecolor=white,
+    outerlinewidth=0.0pt,
+    roundcorner=0pt,
+    innerleftmargin = 0.3cm,
+        innertopmargin=0cm,
+    innerbottommargin=0.2cm,
+    backgroundcolor=white}    
+
+%%%%%%%%%%%%%%%%%%%%%%%
+% Some commands       %
+%%%%%%%%%%%%%%%%%%%%%%%
+% Notes
+\newcommand{\note}[1]{\todo[inline]{#1}}
+\newcommand{\urgent}[1]{\todo[inline, color=red]{#1}}
+\newcommand{\revision}[1]{\todo[inline, color=green]{#1}}
+\newcommand{\fix}[1]{\todo[inline, color=yellow]{#1}}
+% Tables
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcommand{\adaptcell}[1]{\parbox{0.95\columnwidth}{\vspace{0.5em}#1\vspace{0.5em}}}
+% Math
+\newcommand{\rarrow}{$\rightarrow\ $}
+\newcommand{\larrow}{$\leftarrow\ $}
+\newcommand{\lif}{\rightarrow}
+\newcommand{\liff}{\leftrightarrow}
+\newcommand{\la}{\forall}
+\renewcommand{\le}{\exists}
+\newcommand{\lxor}{\dot\vee}
+\renewcommand{\ll}{\llbracket}
+\renewcommand{\phi}{\varphi}
+\newcommand{\rr}{\rrbracket}
+\newcommand{\lk}{\square}
+\newcommand{\lp}{\lozenge}
+\newcommand{\argmin}[1]{\underset{#1}{\mathrm{argmin}}}
+\newcommand{\argmax}[1]{\underset{#1}{\mathrm{argmax}}}
+\newcommand{\Sum}[1]{\underset{#1}{\sum}}
+
+% Others
+\newcommand{\newcolumn}{\vfill\pagebreak}
+\renewcommand{\b}[1]{\textbf{#1}}
+\renewcommand{\it}[1]{\textit{#1}}
+\renewcommand{\u}[1]{\underline{#1}}
+
+%%%%%%%%%%% STUFF TO PRINT SEMANTIC TABLEAUX %%%%%%%%%%
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows,calc, trees, automata}
+
+\tikzset{
+	modal/.style={>=stealth',shorten >=1pt,shorten <=1pt,auto,node distance=1.5cm,semithick},world/.style={circle,draw,minimum size=0.5cm,fill=gray!15},point/.style={circle,draw,inner sep=0.5mm,fill=black},reflexive above/.style={->,loop,looseness=7,in=120,out=60},reflexive below/.style={->,loop,looseness=7,in=240,out=300},reflexive left/.style={->,loop,looseness=7,in=150,out=210},reflexive right/.style={->,loop,looseness=7,in=30,out=330},none/.style={}
+}
+
+\forestset{%
+	declare toks={T}{},
+	declare toks={F}{},
+	my label/.style={%
+		tikz+={%
+			\path[late options={%
+				name=\forestoption{name},label={#1}}
+			];
+		}
+	},
+	tableaux/.style={%
+		forked edges,
+		for tree={
+			math content,
+			parent anchor=children,
+			child anchor=parent,
+		},
+		where level=0{%
+			for children={no edge},
+			phantom,
+		}{%
+			before typesetting nodes={%
+				content/.wrap value={\circ},
+			},
+			delay={%
+				my label/.wrap pgfmath arg={{[inner sep=0pt, xshift=-3.5pt, yshift=3.5pt, anchor=north west, font=\scriptsize]-45:$##1$}}{content()},
+				insert before/.wrap pgfmath arg={%
+					[{##1}, no edge, math content, before drawing tree={x'+=7.5pt}]
+				}{T()},
+				insert after/.wrap pgfmath arg={%
+					[{##1}, no edge, math content, before drawing tree={x'-=7.5pt}]
+				}{F()},
+			},
+			if={n_children("!u")==1}{%
+				before packing={calign with current edge},
+			}{}
+		},
+	}
+}
+
+\forestset{
+  smullyan tableaux/.style={
+    for tree={
+      math content
+    },
+    where n children=1{
+      !1.before computing xy={l=\baselineskip},
+      !1.no edge
+    }{},
+    closed/.style={
+      label=below:$\times$
+    },
+  },
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\addbibresource{ref.bib}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\title{ \Huge \textbf{Research Proposal: Democracy And Education} \\[0.5cm]}
+
+\author{
+\begin{tabular}{ll}
+Names
+  
+\end{tabular} \bigskip \\
+
+\textit{Accessible Science Source} \\
+% \textit{Open Science Iran}\\
+% \textit{osIran}\\
+
+}
+\date{January 2023}
+\addbibresource{ref.bib}
+
+
+\begin{document}
+
+\maketitle
+
+
+
+%\tableofcontents
+% \note{TODO: social impact}
+
+\section{Introduction}
+
+\section{Motivation}
+
+\section{Terminology}
+
+
+\subsection{Science}
+\subsection{Open Science}
+Open science is the movement to make scientific research and its dissemination accessible to all levels of society, amateur or professional. Open science is transparent and accessible knowledge that is shared and developed through collaborative networks.
+
+\subsection{Open Source}
+Open source is source code that is made freely available for possible modification and redistribution. Products include permission to use the source code, design documents, or content of the product. The open-source model is a decentralized software development model that encourages open collaboration. A main principle of open-source software development is peer production, with products such as source code, blueprints, and documentation freely available to the public.
+
+\subsection{Open Source Open Science}
+
+Open source open science is a combination of the two movements to create a global open collaborative effort in science by sharing the raw data, documents and the progress of the research with open source tools such as git.
+When the raw document formats such as odt, tex, txt are shared, true collaboration and update of science is possible.
+This introduces a paradigm shift in science with introducing updates to scientific works, and decoupling of ideas from authors. With this metholodogy your work could potencially have contributers that are not born yet.
+
+FIX THIS
+
+\section{Open Source Science Research Center}
+About Accessible science source 
+
+\section{Plans}
+
+\subsection{Research on Taiwan, Sweden}
+
+\subsection{Research on Finland, Danmark}
+
+\subsection{Creation of a new open source open science platform}
+\subsubsection{Collaborative platform for scienists}
+\subsubsection{Educational platform for all}
+
+\clearpage
+\newpage
+
+
+\printbibliography
+
+
+% \input{7-appendix}
+\end{document}
